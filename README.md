@@ -1,12 +1,11 @@
-![ScreenShot](http://trash80.net/arduinoboy/mGB1_2_0.png)
 # mGB
 mGB - Nintendo Gameboy MIDI control for Arduinoboy
 mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware) That enables the Gameboy to act as a full MIDI supported sound module. It works with the old DMG Gameboy as well as GBC/GBA.
 
 [More information about Arduinoboy](https://github.com/trash80/arduinoboy)
+![ScreenShot](http://trash80.net/arduinoboy/mGB1_2_0.png)
 
-
-## mGB Change Log
+## Change Log
  * Feb 2 2009 1.3.0
    * Rewrote 90% of code into assembly for much faster performance- especially noticeable on DMG.
    * Changed note behavior. Removed Monophonic note memory to increase performance. 
@@ -46,7 +45,7 @@ mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware)
   * Fixed bug with Wav Synth hanging after sequencer stop. 
   * Fixed bug with Wav Synth not resetting monophonic keyboard note triggers
 
-## mGB Button shortcuts
+## Button Shortcuts
  * Start: MIDI Panic
  * Select + Dpad: Select multiple synths for editing.
  * Select + A: Toggles the screen on or off, better battery life, less noise, and faster response.
@@ -55,7 +54,7 @@ mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware)
  * A + Dpad: Change parameter value 
  * To load/save presets, put the cursor on the "PRESET" number, and hit B for load, Select+B to save
 
-## mGB MIDI Implementation
+## MIDI Implementation
 Note: the name and number at the bottom left of the screen indicates the midi CC of the selected parameter.
 
  * PU1 - MIDI CH1
