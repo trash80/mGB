@@ -7,6 +7,16 @@ mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware)
 ![ScreenShot](http://trash80.net/arduinoboy/mGB1_2_0.png)
 
 ## Change Log
+ * 12/21/12
+   * mGB to version 1.3.3 : End of the world release. ;)
+     * Fixed a bug with the new pitchbend resolution
+     * Optimized some of the pitchbend routine
+ * 12/20/12
+   * mGB to version 1.3.2
+     * Increased pitchbend resolution
+ * 12/19/12
+   * mGB to version 1.3.1
+     * Fixed PU1 Envelope retrigger bug. 
  * Feb 2 2009 1.3.0
    * Rewrote 90% of code into assembly for much faster performance- especially noticeable on DMG.
    * Changed note behavior. Removed Monophonic note memory to increase performance. 
