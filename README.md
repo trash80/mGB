@@ -1,5 +1,4 @@
 # mGB
-mGB - Nintendo Gameboy MIDI control for Arduinoboy
 mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware) That enables the Gameboy to act as a full MIDI supported sound module. It works with the old DMG Gameboy as well as GBC/GBA.
 
 [More information about Arduinoboy](https://github.com/trash80/arduinoboy)
