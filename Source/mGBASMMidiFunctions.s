@@ -1,55 +1,40 @@
-_asmUpdateSerial::
-	ld	hl,#_io_in
-	ld  A, (hl)
-	ld	B,A
-	ld	hl,#_midiDataWritePosition
-	ld	A,#<_midiData
-    add	A,(hl)
-	ld	E,A
-    ld	A,#>_midiData
-	ld	D,A
-	ld	A,(DE)
-	ld	A,B
-	inc (hl)
-ret
-
 _asmUpdateMidiBuffer::
 push bc
-	ld	hl,#_midiDataWritePosition
+	ld	hl,#_serialBufferPosition
 	ld  A, (hl)
-	ld	hl,#_midiDataReadPosition
+	ld	hl,#_serialBufferReadPosition
     cp  (hl)
 	jr z,_popReturn$
-	
+
 	inc (hl)
-	
-	ld	A,#<_midiData
+
+	ld	A,#<_serialBuffer
     add	A,(hl)
 	ld	E,A
-    ld	A,#>_midiData
+    ld	A,#>_serialBuffer
 	ld	D,A
 	ld	A,(DE)
-	
+
 	bit	7,A
 	jr nz,_asmUpdateMidiBufferStatus$
-	
+
 	ld	hl,#_capturedAddress
 	bit	0,(hl)
 	jr z,_asmUpdateMidiBufferAddress$
-	
+
 	ld	hl,#_capturedAddress
 	ld (hl),#0x00
 	ld	hl,#_valueByte
 	ld (hl),A
 	ld hl,#_systemIdle
 	ld (hl),#0x00
-	
+
 	ld	hl,#_statusByte
 	ld	A,(hl)
 	ld	B,A
 	SWAP A
 	AND	#0x0F
-	
+
 	cp	#0x0E
 		jr z,_asmEventMidiPB$
 	cp	#0x0B
@@ -73,12 +58,12 @@ _asmUpdateMidiBufferStatus$::
 	cp	#0xF0
 		jr z,_popReturn$
 	ld	A,B
-	
+
 	ld	hl,#_statusByte
 	ld (hl),A
 	ld	hl,#_capturedAddress
 	ld (hl),#0x00
-	
+
 	ld hl,#_systemIdle
 	ld (hl),#0x00
 pop	bc
@@ -88,7 +73,7 @@ _asmUpdateMidiBufferAddress$::
 	ld (hl),#0x01
 	ld	hl,#_addressByte
 	ld (hl),A
-	
+
 	ld hl,#_systemIdle
 	ld (hl),#0x00
 pop	bc
@@ -184,7 +169,7 @@ _asmPu1MidiPb$::
 	RLCA
 	AND	#0x01
 	OR	C
-	
+
 	ld	de,#_pbWheelIn + 0
     ld	(de),A
 pop	bc
@@ -202,7 +187,7 @@ _asmPu2MidiPb$::
 	RLCA
 	AND	#0x01
 	OR	C
-	
+
 	ld	de,#_pbWheelIn + 1
     ld	(de),A
 pop	bc
@@ -220,7 +205,7 @@ _asmWavMidiPb$::
 	RLCA
 	AND	#0x01
 	OR	C
-	
+
 	ld	de,#_pbWheelIn + 2
     ld	(de),A
 pop	bc
@@ -238,7 +223,7 @@ _asmNoiMidiPb$::
 	RLCA
 	AND	#0x01
 	OR	C
-	
+
 	ld	de,#_pbWheelIn + 3
     ld	(de),A
 pop	bc
@@ -256,7 +241,7 @@ _asmPolyMidiPb$::
 	RLCA
 	AND	#0x01
 	OR	C
-	
+
 	ld	de,#_pbWheelIn + 0
     ld	(de),A
 	ld	de,#_pbWheelIn + 1
@@ -302,15 +287,15 @@ _asmPu1Wav$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	RLCA
 	AND #0xC0
 	OR #0x07
 	ld (#0xFF11),A
-	
+
 	SWAP A
 	RRCA
 	RRCA
@@ -326,18 +311,18 @@ _asmPu1Env$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	RRCA
 	RRCA
 	RRCA
 	AND #0x0F
-	
+
 	ld	hl,#_pu1Env
 	ld	(hl),A
-	
+
 	ld	de,#_dataSet + 2
     ld	(de),A
 pop	bc
@@ -349,12 +334,12 @@ _asmPu1Swp$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld (#0xFF10),A
-	
+
 	ld	de,#_dataSet + 3
     ld	(de),A
 pop	bc
@@ -364,10 +349,10 @@ ret
 _asmPu1Pbr$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_pbRange + 0
     ld	(de),A
-	
+
 	ld	de,#_dataSet + 4
     ld	(de),A
 pop	bc
@@ -377,7 +362,7 @@ ret
 _asmPu1Lod$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_dataSet + 24
     ld	(de),A
 
@@ -400,7 +385,7 @@ _asmPu1Pan$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	AND #0x60
@@ -417,7 +402,7 @@ _asmPu1PanLeft$::
 	ld	de,#_dataSet + 6
     ld	(de),A
 	ld  B,#0x10
-	
+
 	ld  A,(#0xFF25)
 	and #0xEE
 	or	B
@@ -429,7 +414,7 @@ _asmPu1PanCenter$::
 	ld	de,#_dataSet + 6
     ld	(de),A
 	ld  B,#0x11
-	
+
 	ld  A,(#0xFF25)
 	and #0xEE
 	or	B
@@ -441,7 +426,7 @@ _asmPu1PanRight$::
 	ld	de,#_dataSet + 6
     ld	(de),A
 	ld  B,#0x01
-	
+
 	ld  A,(#0xFF25)
 	and #0xEE
 	or	B
@@ -453,10 +438,10 @@ ret
 _asmPu1VD$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoDepth + 0
     ld	(de),A
-	
+
 pop	bc
 ret
 
@@ -464,7 +449,7 @@ ret
 _asmPu1VR$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoSpeed + 0
     ld	(de),A
 pop	bc
@@ -548,15 +533,15 @@ _asmPu2Wav$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	RLCA
 	AND #0xC0
 	OR #0x07
 	ld (#0xFF16),A
-	
+
 	SWAP A
 	RRCA
 	RRCA
@@ -572,18 +557,18 @@ _asmPu2Env$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	RRCA
 	RRCA
 	RRCA
 	AND #0x0F
-	
+
 	ld	hl,#_pu2Env
 	ld	(hl),A
-	
+
 	ld	de,#_dataSet + 9
     ld	(de),A
 pop	bc
@@ -592,10 +577,10 @@ ret
 _asmPu2Pbr$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_pbRange + 1
     ld	(de),A
-	
+
 	ld	de,#_dataSet + 10
     ld	(de),A
 pop	bc
@@ -605,7 +590,7 @@ ret
 _asmPu2Lod$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_dataSet + 25
     ld	(de),A
 
@@ -628,7 +613,7 @@ _asmPu2Pan$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	AND #0x60
@@ -645,7 +630,7 @@ _asmPu2PanLeft$::
 	ld	de,#_dataSet + 12
     ld	(de),A
 	ld  B,#0x20
-	
+
 	ld  A,(#0xFF25)
 	and #0xDD
 	or	B
@@ -657,7 +642,7 @@ _asmPu2PanCenter$::
 	ld	de,#_dataSet + 12
     ld	(de),A
 	ld  B,#0x22
-	
+
 	ld  A,(#0xFF25)
 	and #0xDD
 	or	B
@@ -669,7 +654,7 @@ _asmPu2PanRight$::
 	ld	de,#_dataSet + 12
     ld	(de),A
 	ld  B,#0x02
-	
+
 	ld  A,(#0xFF25)
 	and #0xDD
 	or	B
@@ -681,10 +666,10 @@ ret
 _asmPu2VD$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoDepth + 1
     ld	(de),A
-	
+
 pop	bc
 ret
 
@@ -692,7 +677,7 @@ ret
 _asmPu2VR$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoSpeed + 1
     ld	(de),A
 pop	bc
@@ -778,18 +763,18 @@ _asmWavWav$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	RLCA
 	AND #0xF0
 	SWAP A
-	
+
 	ld	de,#_dataSet + 14
     ld	(de),A
 
 	SWAP A
-	
+
 	ld	hl,#_dataSet + 15
 	ADD A,(hl)
 	ld	hl,#_wavDataOffset
@@ -803,7 +788,7 @@ _asmWavOst$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	RRCA
@@ -812,12 +797,12 @@ _asmWavOst$::
 	ld	de,#_dataSet + 15
     ld	(de),A
 	ld	B,A
-	
+
 	ld	hl,#_dataSet + 14
 	ld  A,(hl)
 	SWAP A
 	ADD B
-	
+
 	ld	hl,#_wavDataOffset
 	ld	(hl),A
 pop	bc
@@ -829,7 +814,7 @@ _asmWavSwp$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	RLCA
@@ -846,10 +831,10 @@ ret
 _asmWavPbr$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_pbRange + 2
     ld	(de),A
-	
+
 	ld	de,#_dataSet + 17
     ld	(de),A
 pop	bc
@@ -859,7 +844,7 @@ ret
 _asmWavLod$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_dataSet + 26
     ld	(de),A
 
@@ -882,7 +867,7 @@ _asmWavPan$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	AND #0x60
@@ -899,7 +884,7 @@ _asmWavPanLeft$::
 	ld	de,#_dataSet + 19
     ld	(de),A
 	ld  B,#0x40
-	
+
 	ld  A,(#0xFF25)
 	and #0xBB
 	or	B
@@ -911,7 +896,7 @@ _asmWavPanCenter$::
 	ld	de,#_dataSet + 19
     ld	(de),A
 	ld  B,#0x44
-	
+
 	ld  A,(#0xFF25)
 	and #0xBB
 	or	B
@@ -923,7 +908,7 @@ _asmWavPanRight$::
 	ld	de,#_dataSet + 19
     ld	(de),A
 	ld  B,#0x04
-	
+
 	ld  A,(#0xFF25)
 	and #0xBB
 	or	B
@@ -935,10 +920,10 @@ ret
 _asmWavVD$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoDepth + 2
     ld	(de),A
-	
+
 pop	bc
 ret
 
@@ -946,7 +931,7 @@ ret
 _asmWavVR$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoSpeed + 2
     ld	(de),A
 pop	bc
@@ -1026,18 +1011,18 @@ _asmNoiEnv$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	RRCA
 	RRCA
 	RRCA
 	AND #0x0F
-	
+
 	ld	hl,#_noiEnv
 	ld	(hl),A
-	
+
 	ld	de,#_dataSet + 21
     ld	(de),A
 pop	bc
@@ -1047,7 +1032,7 @@ ret
 _asmNoiLod$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_dataSet + 27
     ld	(de),A
 
@@ -1070,7 +1055,7 @@ _asmNoiPan$::
 	ld	A,(de)
 	bit 0, A
 	jp nz, _popReturn$
-	
+
 	ld	hl,#_valueByte
 	ld	A,(hl)
 	AND #0x60
@@ -1087,7 +1072,7 @@ _asmNoiPanLeft$::
 	ld	de,#_dataSet + 23
     ld	(de),A
 	ld  B,#0x80
-	
+
 	ld  A,(#0xFF25)
 	and #0x77
 	or	B
@@ -1099,7 +1084,7 @@ _asmNoiPanCenter$::
 	ld	de,#_dataSet + 23
     ld	(de),A
 	ld  B,#0x88
-	
+
 	ld  A,(#0xFF25)
 	and #0x77
 	or	B
@@ -1111,7 +1096,7 @@ _asmNoiPanRight$::
 	ld	de,#_dataSet + 23
     ld	(de),A
 	ld  B,#0x08
-	
+
 	ld  A,(#0xFF25)
 	and #0x77
 	or	B
@@ -1123,10 +1108,10 @@ ret
 _asmNoiVD$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoDepth + 3
     ld	(de),A
-	
+
 pop	bc
 ret
 
@@ -1134,7 +1119,7 @@ ret
 _asmNoiVR$::
 	ld	hl,#_valueByte
 	ld	A,(hl)
-	
+
 	ld	de,#_vibratoSpeed + 3
     ld	(de),A
 pop	bc
@@ -1191,7 +1176,7 @@ ret
 _asmEventMidiCCPoly$::
 	ld	hl,#_addressByte
 	ld	A,(hl)
-	
+
 	cp	#0x01
 		jr z,_asmPolyWav$;
 	cp	#0x02
@@ -1252,4 +1237,3 @@ push	bc
 push	bc
 	call _asmWavNf$;
 ret
-

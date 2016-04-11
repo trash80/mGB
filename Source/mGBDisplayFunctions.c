@@ -87,7 +87,7 @@ void updateDisplayValue(UBYTE p,UBYTE v)
 }
 
 void updateDisplaySynth()
-{	
+{
 	for(i=0;i!=0x09U;i++) {
 		if(tableCursorLookup[updateDisplaySynthCounter][i] != 0xFFU) {
 			updateDisplayValue(tableCursorLookup[updateDisplaySynthCounter][i],dataSet[tableCursorLookup[updateDisplaySynthCounter][i]]);
@@ -96,8 +96,8 @@ void updateDisplaySynth()
 }
 
 void updateDisplay()
-{	
-	x=0;
+{
+	UBYTE x=0;
 	for(j=0;j!=0x04U;j++) {
 		for(i=0;i!=0x09U;i++) {
 			if(tableCursorLookup[j][i] != 0xFFU) {
@@ -118,11 +118,11 @@ void setCursor()
 		if(!joyState[6]) {
 			cursorEnable[cursorColumnLast]=0U;
 		}
-			
+
 		//cursorRow[cursorColumn] = cursorRowMain;
 		cursorColumnLast = cursorColumn;
 	}
-	
+
 	for(j=0;j!=4;j++) {
 		if(shiftSelect && !joyState[6] && cursorColumn != j) {
 			cursorEnable[j] = 0;
@@ -132,7 +132,7 @@ void setCursor()
 			if(cursorRow[j] > 0x08U) cursorRow[j] = 0U;
 			move_sprite(SPRITE_ARRT_START, cursorBigStartX[cursorColumn], cursorBigStartY[0]);
 			move_sprite(j+SPRITE_ARRL_START, cursorStartX[j], (cursorRow[j] * SCREEN_YSPACE) + SCREEN_PSTARTY + SCREEN_YO);
-			if(j==cursorColumn) cursorRowMain = cursorRow[j]; 
+			if(j==cursorColumn) cursorRowMain = cursorRow[j];
 		}
 	}
 	for(j=0;j!=4;j++) {
@@ -201,12 +201,12 @@ void showMainScreen()
 	bkg[0]=67;set_bkg_tiles(7,3,1,1,bkg);
 	bkg[0]=68;set_bkg_tiles(11,3,1,1,bkg);
 	bkg[0]=69;set_bkg_tiles(15,3,1,1,bkg);
-	
+
 	for(j=0;j!=28;j++) {
 		bkg[0] = bkg[1] = 1;
 		set_bkg_tiles(tableData[j][0],tableData[j][1],2,1,bkg);
 	}
-	
+
 	updateDisplay();
     showCursor();
 }
@@ -232,14 +232,14 @@ void toggleScreen()
 void displaySetup()
 {
 	DISPLAY_OFF;
-	set_bkg_palette( 0, 1, &bgpalette[0] ); 
+	set_bkg_palette( 0, 1, &bgpalette[0] );
 
 	/* Initialize the background */
-	set_bkg_data(0, 92, data_font);	
+	set_bkg_data(0, 92, data_font);
 	//set_bkg_tiles(1,0, 20, 18, bgmap);
-	
+
 	set_sprite_palette(0,2,&spritepalette[0]);
-	
+
 	for(j=0;j!=4;j++) {
 		cursorBigStartX[j] = SCREEN_XO + SCREEN_PSTARTX + (j * SCREEN_XSPACE) - 1;
 		cursorBigStartY[j] = SCREEN_YO + SCREEN_PSTARTY - 8;
@@ -247,18 +247,18 @@ void displaySetup()
 		cursorStartY[j] = SCREEN_YO + SCREEN_PSTARTY;
 		cursorRow[j] = cursorStartY[j];
 	}
-	
+
 	SPRITES_8x8;
-	
+
 	set_sprite_data(SPRITE_ARRT,0x01U, data_barrow);
 	set_sprite_data(SPRITE_ARRL,0x01U, data_larrow);
-	
-	
+
+
 	set_sprite_tile(SPRITE_ARRT_START, SPRITE_ARRT);
 	for(j=0;j!=4;j++) set_sprite_tile(j+SPRITE_ARRL_START, SPRITE_ARRL);
-	
+
 	for(j=0;j!=4;j++) set_sprite_prop(j+SPRITE_ARRT_START,1);
 	for(j=0;j!=4;j++) set_sprite_prop(j+SPRITE_ARRL_START,1);
-	
+
 	DISPLAY_ON;
 }

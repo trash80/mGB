@@ -50,7 +50,7 @@ void updateWav()
 		NR33_REG = freq[noteStatus[WAV_CURRENT_NOTE]];
 		wavCurrentFreq = freq[noteStatus[WAV_CURRENT_NOTE]];
 	}
-	
+
 	if(wavShapeLast != wavDataOffset) {
 	  asmLoadWav(wavDataOffset);
   	  pbWheelInLast[WAV] = PBWHEEL_CENTER;
@@ -76,34 +76,34 @@ void updateNoi()
 
 
 void playNotePu1()
-{ 
+{
 	x = noteStatus[PU1_CURRENT_NOTE];
 	note = addressByte;
 	envelope = valueByte;
 	note -=36U;
 	if(envelope) {
 		noteStatus[PU1_CURRENT_NOTE]=note;
-		
+
 		if(pu1Oct<0){
 			if(note > (pu1Oct*-1)) note = note + pu1Oct;
 		} else {
 			note = note + pu1Oct;
 		}
 		if(pu1Oct!=0) while(note>71) note -=12;
-		
+
 		NR12_REG = ((envelope << 1U) & 0xF0U) + pu1Env; //Take a value from 0 to 127 and make it 0 to 255, and add in the envelope
 		NR14_REG = 0x80+(freq[note]>>8U);
 		NR13_REG = freq[note];
 		currentFreqData[PU1] = freq[note];
 		vibratoPosition[PU1]=0;
-		
+
 		pbNoteRange[0] = note - pbRange[0];
 		pbNoteRange[1] = note + pbRange[0];
-		
+
 		noteStatus[PU1_CURRENT_STATUS]=1U;
 	    //noteStatus[PU1_CURRENT_ENV]=noteStatus[PU1_OLD_ENV]=envelope;
 		pbWheelInLast[PU1] = PBWHEEL_CENTER;
-		
+
 	} else if(x == note) {
 		noteStatus[PU1_CURRENT_STATUS]=0U; // <<<
 		if (!pu1Sus) {
@@ -131,10 +131,10 @@ void playNotePu2()
 		NR23_REG = (freq[note]);
 		currentFreqData[PU2] = freq[note];
 		vibratoPosition[PU2]=0;
-		
+
 		pbNoteRange[2] = note - pbRange[1];
 		pbNoteRange[3] = note + pbRange[1];
-		
+
 		noteStatus[PU2_CURRENT_STATUS]=1U;
 		noteStatus[PU2_CURRENT_NOTE]=note;
 	    //noteStatus[PU2_OLD_ENV] = noteStatus[PU2_CURRENT_ENV] = envelope;
@@ -161,13 +161,13 @@ void playNoteWav()
 		} else {
 			note = note + wavOct;
 		}
-		
+
 		if(wavOct!=0) while(note>71) note -=12;
-		
+
 		noteStatus[WAV_OLD_ENV] = envelope;
 		envelope = (envelope>>5U);
 		vibratoPosition[WAV]=0;
-		
+
 		switch(envelope) {
 			case 0:
 			envelope = 0x00U;
@@ -181,7 +181,7 @@ void playNoteWav()
 			default:
 			envelope = 0x20U;
 		}
-		
+
 		NR32_REG = envelope;
 		NR34_REG = 0x07U&(freq[note]>>8U);
 		NR33_REG = (freq[note]);
@@ -191,7 +191,7 @@ void playNoteWav()
 		noteStatus[WAV_CURRENT_NOTE]=note;
 	    noteStatus[WAV_CURRENT_ENV] =envelope;
 		pbWheelInLast[WAV] = PBWHEEL_CENTER;
-		
+
 		wavCurrentFreq = freq[note];
 		wavOriginalFreq = freq[note];
 		currentFreqData[WAV] = freq[note];
@@ -199,7 +199,7 @@ void playNoteWav()
 		counterWav=0U;
 		counterWavStart=0U;
 		cueWavSweep=1U;
-		
+
 	} else if (x == note) {
 		noteStatus[WAV_CURRENT_STATUS]=0U;
 		if(!wavSus) {
@@ -220,14 +220,14 @@ void playNoteNoi()
 		NR41_REG = 0xFFU; //sound length
 		NR44_REG = 0x80U;
 		currentFreqData[NOI] = noiFreq[note];
-		
+
 		vibratoPosition[NOI]=0;
-		
+
 		noteStatus[NOI_CURRENT_STATUS]=1;
 		noteStatus[NOI_CURRENT_NOTE]=note;
 	   // noteStatus[NOI_CURRENT_ENV] = noteStatus[NOI_OLD_ENV] = envelope;
 		pbWheelInLast[NOI] = PBWHEEL_CENTER;
-		
+
 	} else if (noteStatus[NOI_CURRENT_NOTE] == note) {
 	    //stop current note
 		noteStatus[NOI_CURRENT_STATUS] = 0U;
@@ -277,7 +277,7 @@ void setOutputSwitch()
 void setOutputPanBySynth(UBYTE synth, UBYTE value)
 {
 	outputSwitchValue[synth]=value;
-	
+
 	if(value == 3U) {
     	value = 0x11<<synth;
 	} else if(value == 2U) {
@@ -316,7 +316,7 @@ void updateValueSynth(UBYTE p)
 			pu1Oct = (pu1Oct - 2U) * 12U;
 		break;
 		case 1:
-			NR11_REG = dataSet[p] << 3U << 3U |7U;
+			NR11_REG = ((dataSet[p] << 3) << 3) |7;
 		break;
 		case 2:
 			pu1Env = dataSet[p];
@@ -339,7 +339,7 @@ void updateValueSynth(UBYTE p)
 			pu2Oct = (pu2Oct - 2U) * 12U;
 		break;
 		case 8:
-			NR21_REG = dataSet[p] << 3U << 3U |7U;
+			NR21_REG = ((dataSet[p] << 3) << 3) |7;
 		break;
 		case 9:
 			pu2Env = dataSet[p];
@@ -391,6 +391,8 @@ void updateValueSynth(UBYTE p)
 		case 23:
 			setOutputPanBySynth(3U,dataSet[p]);
 			break;
+    default:
+      break;
 	}
 }
 
@@ -408,7 +410,7 @@ void updateSynth(UBYTE synth)
 void updateSynths()
 {
 	enable_interrupts();
-	
+
 	if(vibratoDepth[PU1]) updateVibratoPosition(PU1);
 	if(vibratoDepth[PU2]) updateVibratoPosition(PU2);
 	if(vibratoDepth[WAV]) updateVibratoPosition(WAV);
