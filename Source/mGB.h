@@ -50,7 +50,7 @@ void asmPlayNotePu1();
 #define SPRITE_ARRL_START 27
 #define SPRITE_PUFREQ_LOW 1
 
-const UWORD freq[72] = {
+UWORD freq[72] = {
   44, 	156,  262,  363,  457,  547,  631,  710,  786,  854,  923,  986,
   1046, 1102, 1155, 1205, 1253, 1297, 1339, 1379, 1417, 1452, 1486, 1517,
   1546, 1575, 1602, 1627, 1650, 1673, 1694, 1714, 1732, 1750, 1767, 1783,
@@ -61,7 +61,7 @@ const UWORD freq[72] = {
 
 UBYTE noteStatus[8];
 
-const UBYTE noiFreq[72] = {
+UBYTE noiFreq[72] = {
 0x94,0x87,0x86,0x85,0x84,0x77,0x76,0x75,0x74,0x67,0x66,0x65,
 0x64,0x57,0x56,0x55,0x54,0x47,0x46,0x45,0x44,0x37,0x36,0x35,
 0x34,0x27,0x26,0x25,0x24,0x17,0x16,0x15,0x14,0x07,0x06,0x00,
@@ -413,7 +413,7 @@ const unsigned char versionnumber[10] =
 	32,81,
 	2,81,
 	4,81,
-	1,
+	4,
 	0,0,0
 };
 

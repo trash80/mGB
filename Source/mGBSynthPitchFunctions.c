@@ -1,45 +1,54 @@
-void setPitchBendFrequencyOffset(UBYTE synth,UBYTE synth_pitch,UBYTE synth_note_range)
+void setPitchBendFrequencyOffset(UBYTE synth)
 {
-	systemIdle = 0;
-	if(synth != NOI) {
-		if(pbWheelIn[synth] & PBWHEEL_CENTER) {
-			currentFreq = pbWheelIn[synth] - PBWHEEL_CENTER;
-			currentFreq++;
-			currentFreq = (currentFreq<<4) / PBWHEEL_CENTER;
-			currentFreq = (freq[pbNoteRange[synth_note_range+1]] - freq[noteStatus[synth_pitch]]) * currentFreq;
-			currentFreq = freq[noteStatus[synth_pitch]] + (currentFreq>>4);
-		} else {
-			currentFreq = PBWHEEL_CENTER - pbWheelIn[synth];
-			currentFreq = (currentFreq<<4) / PBWHEEL_CENTER;
-			currentFreq = (freq[noteStatus[synth_pitch]] - freq[pbNoteRange[synth_note_range]]) * currentFreq;
-			currentFreq = freq[noteStatus[synth_pitch]] - (currentFreq>>4);
-		}
-
-		if(synth == PU1) {
+  UWORD freqRange;
+  UWORD f = freq[noteStatus[(synth<<1)+0x01]];
+  systemIdle = 0;
+	if(pbWheelIn[synth] & 0x80) {
+		freqRange = freq[pbNoteRange[(synth<<1)+0x01]];
+		currentFreq = (UWORD) (pbWheelIn[synth] - 0x7F);
+    currentFreq <<= 6;
+		currentFreq /= 128;
+		currentFreq = currentFreq * (freqRange - f);
+		currentFreq = f + (currentFreq>>6);
+	} else {
+		freqRange = freq[pbNoteRange[synth<<1]];
+    currentFreq = (UWORD) (0x80 - pbWheelIn[synth]);
+    currentFreq <<= 6;
+		currentFreq /= 128;
+    currentFreq = currentFreq * (f - freqRange);
+    currentFreq = f - (currentFreq>>6);
+	}
+	switch(synth) {
+		case PU1:
 			NR14_REG = (currentFreq>>8U);
 			NR13_REG = currentFreq;
 			currentFreqData[PU1] = currentFreq;
-		} else if (synth == PU2) {
+			break;
+		case PU2:
 			NR24_REG = (currentFreq>>8U);
 			NR23_REG = currentFreq;
 			currentFreqData[PU2] = currentFreq;
-		} else if (synth == WAV) {
+			break;
+		default:
 			NR34_REG = (currentFreq>>8U);
 			NR33_REG = currentFreq;
 			wavCurrentFreq = currentFreq;
 			currentFreqData[WAV] = currentFreq;
-		}
-	} else {
-		if(pbWheelIn[NOI] > PBWHEEL_CENTER) {
-		    noteStatus[NOI_CURRENT_NOTE] = noteStatus[NOI_CURRENT_NOTE];
-			currentFreq = noiFreq[noteStatus[NOI_CURRENT_NOTE] + ((pbWheelIn[NOI] - PBWHEEL_CENTER) >>3)];
-		} else {
-		    noteStatus[NOI_CURRENT_NOTE] = noteStatus[NOI_CURRENT_NOTE];
-			currentFreq = noiFreq[noteStatus[NOI_CURRENT_NOTE] - ((PBWHEEL_CENTER - pbWheelIn[NOI]) >>3)];
-		}
-		NR43_REG = currentFreq;
-		currentFreqData[NOI] = currentFreq;
 	}
+}
+
+void setPitchBendFrequencyOffsetNoise()
+{
+  systemIdle = 0;
+  if(pbWheelIn[NOI] & 0x80) {
+      noteStatus[NOI_CURRENT_NOTE] = noteStatus[NOI_CURRENT_NOTE];
+    currentFreq = noiFreq[noteStatus[NOI_CURRENT_NOTE] + ((pbWheelIn[NOI] - 0x80) >>3)];
+  } else {
+      noteStatus[NOI_CURRENT_NOTE] = noteStatus[NOI_CURRENT_NOTE];
+    currentFreq = noiFreq[noteStatus[NOI_CURRENT_NOTE] - ((0x80 - pbWheelIn[NOI]) >>3)];
+  }
+  NR43_REG = currentFreq;
+  currentFreqData[NOI] = currentFreq;
 }
 
 void addVibrato(UBYTE synth){
@@ -78,7 +87,7 @@ void updateVibratoPosition(UBYTE synth)
 		}
 	}
 	addVibrato(synth);
-	
+
 	}
 	vibratoTimer[synth]++;
 }
