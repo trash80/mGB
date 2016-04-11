@@ -1,6 +1,11 @@
 
 extern UBYTE saveData[513U];
 //extern UBYTE wavData[512U];
+
+extern UBYTE serialBuffer[256];
+extern UBYTE serialBufferPosition;
+extern UBYTE serialBufferReadPosition;
+
 UBYTE statusByte;
 UBYTE addressByte;
 UBYTE valueByte;

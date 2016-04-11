@@ -54,11 +54,11 @@ void testSynths()
 void main()
 {
     disable_interrupts();
-	    cpu_fast();
+	  cpu_fast();
 		checkMemory();
 		displaySetup();
 		setSoundDefaults();
-  		add_TIM(updateSynths);
+  	add_TIM(updateSynths);
 
 		loadDataSet(0x00U);
 		loadDataSet(0x01U);

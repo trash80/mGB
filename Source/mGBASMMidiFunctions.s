@@ -1,9 +1,10 @@
+
 _asmUpdateMidiBuffer::
 push bc
 	ld	hl,#_serialBufferPosition
 	ld  A, (hl)
 	ld	hl,#_serialBufferReadPosition
-    cp  (hl)
+  cp  (hl)
 	jr z,_popReturn$
 
 	inc (hl)

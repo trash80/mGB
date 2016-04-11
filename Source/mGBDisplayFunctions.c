@@ -88,6 +88,7 @@ void updateDisplayValue(UBYTE p,UBYTE v)
 
 void updateDisplaySynth()
 {
+  //printbyte(serialBufferPosition,serialBufferReadPosition,serialBuffer[serialBufferPosition]);
 	for(i=0;i!=0x09U;i++) {
 		if(tableCursorLookup[updateDisplaySynthCounter][i] != 0xFFU) {
 			updateDisplayValue(tableCursorLookup[updateDisplaySynthCounter][i],dataSet[tableCursorLookup[updateDisplaySynthCounter][i]]);
@@ -97,7 +98,7 @@ void updateDisplaySynth()
 
 void updateDisplay()
 {
-	UBYTE x=0;
+  UBYTE x=0;
 	for(j=0;j!=0x04U;j++) {
 		for(i=0;i!=0x09U;i++) {
 			if(tableCursorLookup[j][i] != 0xFFU) {
