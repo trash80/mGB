@@ -217,6 +217,7 @@ _asmUpdateWavData$::
 	ld	A, #0x80
 	ld	hl, #_pbWheelInLast + 2
 	ld	(hl), A
+pop bc
 ret
 
 _asmUpdateWavPbWheel$::
