@@ -67,49 +67,49 @@ mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware)
 Note: the name and number at the bottom left of the screen indicates the midi CC of the selected parameter.
 
  * PU1 - MIDI CH1
-  * Program Change: 1 to 15
-  * PB: Pitch bend - up to +/- 12
-  * cc1: Pulse width - 0,32,64,127
-  * cc2: Envelope mode - 0 to 127, 16 possible steps
-  * cc3: Pitch sweep
-  * cc4: Pitchbend Range
-  * cc5: Load Preset
-  * cc10: Pan
-  * cc64: Sustain- Turns off note off. <64 = off, >63 = on
+   * Program Change: 1 to 15
+   * PB: Pitch bend - up to +/- 12
+   * cc1: Pulse width - 0,32,64,127
+   * cc2: Envelope mode - 0 to 127, 16 possible steps
+   * cc3: Pitch sweep
+   * cc4: Pitchbend Range
+   * cc5: Load Preset
+   * cc10: Pan
+   * cc64: Sustain- Turns off note off. <64 = off, >63 = on
 
  * PU2 - MIDI CH2
-  * Program Change: 1 to 15
-  * PB: Pitch bend - up to +/- 12
-  * cc1: Pulse width - 0,32,64,127
-  * cc2: Envelope mode - 0 to 127, 16 possible steps
-  * cc4: Pitchbend Range
-  * cc5: Load Preset
-  * cc10: Pan
-  * cc64: Sustain- Turns off note off. <64 = off, >63 = on
+   * Program Change: 1 to 15
+   * PB: Pitch bend - up to +/- 12
+   * cc1: Pulse width - 0,32,64,127
+   * cc2: Envelope mode - 0 to 127, 16 possible steps
+   * cc4: Pitchbend Range
+   * cc5: Load Preset
+   * cc10: Pan
+   * cc64: Sustain- Turns off note off. <64 = off, >63 = on
 
  * WAV - MIDI CH3
-  * Program Change: 1 to 15
-  * PB: pitch bend - up to +/- 12
-  * cc1: shape select : 16 possible on a 0 to 127 range
-  * cc2: shape offset : 32 possible on a 0 to 127 range
-  * cc3: Pitch Sweep speed. 0=Off, 1-127 speed.
-  * cc4: Pitchbend Range
-  * cc5: Load Preset
-  * cc10: pan
-  * cc64: Sustain- turns off note off. <64 = off, >63 = on
+   * Program Change: 1 to 15
+   * PB: pitch bend - up to +/- 12
+   * cc1: shape select : 16 possible on a 0 to 127 range
+   * cc2: shape offset : 32 possible on a 0 to 127 range
+   * cc3: Pitch Sweep speed. 0=Off, 1-127 speed.
+   * cc4: Pitchbend Range
+   * cc5: Load Preset
+   * cc10: pan
+   * cc64: Sustain- turns off note off. <64 = off, >63 = on
 
  * NOISE - MIDI CH4
-  * Program Change: 1 to 15
-  * PB: pitch bend +/-24
-  * cc2: envelope mode - 0 to 127, 16 possible steps
-  * cc5: Load Preset
-  * cc10: pan
-  * cc64: (sustain) turns off note off. <64 = off, >63 = on
+   * Program Change: 1 to 15
+   * PB: pitch bend +/-24
+   * cc2: envelope mode - 0 to 127, 16 possible steps
+   * cc5: Load Preset
+   * cc10: pan
+   * cc64: (sustain) turns off note off. <64 = off, >63 = on
 
  * POLY MODE - MIDI CH5 - Plays Pu1/Pu2 and Wav in poly
-  * Program Change: 1 to 15
-  * PB: pitch bend +/-2
-  * cc1: See cc1
-  * cc5: Load Preset
-  * cc10: pan
-  * cc64: (sustain) turns off note off. <64 = off, >63 = on
+   * Program Change: 1 to 15
+   * PB: pitch bend +/-2
+   * cc1: See cc1
+   * cc5: Load Preset
+   * cc10: pan
+   * cc64: (sustain) turns off note off. <64 = off, >63 = on
