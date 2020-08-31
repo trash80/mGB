@@ -15,7 +15,7 @@ build:
 
 	$(BIN)/gbdk-n-link.sh $(OBJ)/mgb.rel $(OBJ)/mgb_save.rel $(OBJ)/mGBASMFunctions.rel $(OBJ)/mGBASMSynthFunctions.rel $(OBJ)/mGBASMMidiFunctions.rel -o $(OBJ)/mgb.ihx
 
-	$(BIN)/gbdk-n-make-rom.sh -ya 1 $(OBJ)/mgb.ihx mgb.gb
+	$(BIN)/gbdk-n-make-rom.sh -ya 1 -yc $(OBJ)/mgb.ihx mgb.gb
 
 clean:
 	rm -rf $(OBJ)
