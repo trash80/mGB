@@ -1,3 +1,5 @@
+.module mGBASMSynthFunctions
+
 _asmUpdatePu1::
 push bc
 	ld	hl, #_pu1NoteOffTrigger

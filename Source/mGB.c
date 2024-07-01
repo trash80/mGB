@@ -1,5 +1,4 @@
 #include "mGB.h"
-#include <gb/gb.h>
 
 void printbyte(UBYTE v1, UBYTE v2, UBYTE v3) {
   bkg[0] = (v1 >> 4) + 1;

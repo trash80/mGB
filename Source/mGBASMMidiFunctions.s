@@ -1,3 +1,4 @@
+.module mGBASMMidiFunctions
 
 _asmUpdateMidiBuffer::
 push bc

@@ -1,3 +1,4 @@
+.module mGBASMFunctions
 
 _asmMain::
 	ld	A,#0x01

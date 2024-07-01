@@ -1,14 +1,14 @@
 #pragma once
 
-#include <asm/sm83/types.h>
 #include <gbdk/platform.h>
+#include <types.h>
 
 extern UBYTE saveData[513U];
 // extern UBYTE wavData[512U];
 
-extern UBYTE serialBuffer[256];
-extern UBYTE serialBufferPosition;
-extern UBYTE serialBufferReadPosition;
+UBYTE serialBuffer[256];
+UBYTE serialBufferPosition;
+UBYTE serialBufferReadPosition;
 
 UBYTE statusByte;
 UBYTE addressByte;
@@ -17,15 +17,15 @@ UBYTE captureDataType;
 UBYTE capturedAddress;
 UBYTE updateDisplaySynthCounter;
 
-void asmMain(void) OLDCALL;
-void asmUpdateSerial(void) OLDCALL;
-void asmLoadWav(UBYTE ost) OLDCALL;
-void asmUpdateMidiBuffer(void) OLDCALL;
-void asmUpdatePu1(void) OLDCALL;
-void asmUpdatePu2(void) OLDCALL;
-void asmUpdateWav(void) OLDCALL;
-void asmUpdateNoi(void) OLDCALL;
-void asmPlayNotePu1(void) OLDCALL;
+void asmMain(void);
+void asmUpdateSerial(void);
+void asmLoadWav(UBYTE ost);
+void asmUpdateMidiBuffer(void);
+void asmUpdatePu1(void);
+void asmUpdatePu2(void);
+void asmUpdateWav(void);
+void asmUpdateNoi(void);
+void asmPlayNotePu1(void);
 
 void updateDisplay(void);
 

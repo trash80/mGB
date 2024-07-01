@@ -1,3 +1,4 @@
+#include "mGB.h"
 
 UBYTE wavStepCounter;
 
