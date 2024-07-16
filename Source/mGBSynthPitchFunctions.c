@@ -1,3 +1,5 @@
+#include "mGB.h"
+
 void setPitchBendFrequencyOffset(UBYTE synth)
 {
   UWORD freqRange;
@@ -37,7 +39,7 @@ void setPitchBendFrequencyOffset(UBYTE synth)
 	}
 }
 
-void setPitchBendFrequencyOffsetNoise()
+void setPitchBendFrequencyOffsetNoise(void)
 {
   systemIdle = 0;
   if(pbWheelIn[NOI] & 0x80) {

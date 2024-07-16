@@ -5,7 +5,22 @@ mGB is a Gameboy cartridge program (You need a Flash Cart and Transfer hardware)
 
 ![ScreenShot](http://trash80.net/arduinoboy/mGB1_2_0.png)
 
+## Building mGB
+
+Follow the [GBDK-2020 instructions](https://github.com/gbdk-2020/gbdk-2020/tree/develop?tab=readme-ov-file#usage) and unzip v4.3.0+ into the `gbdk/` folder. Then run make:
+
+```
+cd Source
+
+make           # fast compile
+make DEBUG=1   # enable debug symbols
+make RELEASE=1 # slower compile but faster on device
+make clean     # clean up the build directories
+```
+
 ## Change Log
+ * 07/05/24
+   * Project updated to build with [GBDK-2020](https://github.com/gbdk-2020/gbdk-2020) v4.3.0
  * 06/26/15 
    * Project has been moved to GitHub along with sourcecode.
  * 12/21/12 1.3.3

@@ -1,94 +1,16 @@
-
-_asmUpdateMidiBuffer::
-push bc
-	ld	hl,#_serialBufferPosition
-	ld  A, (hl)
-	ld	hl,#_serialBufferReadPosition
-  cp  (hl)
-	jr z,_popReturn$
-
-	inc (hl)
-
-	ld	A,#<_serialBuffer
-    add	A,(hl)
-	ld	E,A
-    ld	A,#>_serialBuffer
-	ld	D,A
-	ld	A,(DE)
-
-	bit	7,A
-	jr nz,_asmUpdateMidiBufferStatus$
-
-	ld	hl,#_capturedAddress
-	bit	0,(hl)
-	jr z,_asmUpdateMidiBufferAddress$
-
-	ld	hl,#_capturedAddress
-	ld (hl),#0x00
-	ld	hl,#_valueByte
-	ld (hl),A
-	ld hl,#_systemIdle
-	ld (hl),#0x00
-
-	ld	hl,#_statusByte
-	ld	A,(hl)
-	ld	B,A
-	SWAP A
-	AND	#0x0F
-
-	cp	#0x0E
-		jr z,_asmEventMidiPB$
-	cp	#0x0B
-		jr z,_asmEventMidiCC$
-	cp	#0x08
-		jr z,_asmEventMidiNoteOff$
-	cp	#0x09
-		jr z,_asmEventMidiNote$
-	cp	#0x0C
-		jp z,_asmEventMidiPC$
-pop	bc
-ret
+.module mGBASMMidiFunctions
 
 _popReturn$::
-pop	bc
 ret
 
-_asmUpdateMidiBufferStatus$::
-	ld	B,A
-	AND	#0xF0
-	cp	#0xF0
-		jr z,_popReturn$
-	ld	A,B
-
-	ld	hl,#_statusByte
-	ld (hl),A
-	ld	hl,#_capturedAddress
-	ld (hl),#0x00
-
-	ld hl,#_systemIdle
-	ld (hl),#0x00
-pop	bc
-ret
-
-_asmUpdateMidiBufferAddress$::
-	ld (hl),#0x01
-	ld	hl,#_addressByte
-	ld (hl),A
-
-	ld hl,#_systemIdle
-	ld (hl),#0x00
-pop	bc
-ret
-
-_asmEventMidiNoteOff$::
+_asmEventMidiNoteOff::
 	ld	hl,#_valueByte
 	ld	(hl),#0x00
-	jr _asmEventMidiNote$
-pop	bc
+	jr _asmEventMidiNote
 ret
 
-_asmEventMidiNote$::
-	ld	A,B
+_asmEventMidiNote::
+	ld  a,(#_statusByte)
 	AND	#0x0F
 	cp	#0x00
 		jp z,_asmPlayNotePu1;
@@ -100,11 +22,10 @@ _asmEventMidiNote$::
 		jp z,_asmPlayNoteNoi$;
 	cp	#0x04
 		jp z,_asmPlayNotePoly$;
-pop	bc
 ret
 
-_asmEventMidiCC$::
-	ld	A,B
+_asmEventMidiCC::
+	ld  a,(#_statusByte)
 	AND	#0x0F
 	cp	#0x00
 		jp z,_asmEventMidiCCPu1$;
@@ -116,11 +37,10 @@ _asmEventMidiCC$::
 		jp z,_asmEventMidiCCNoi$;
 	cp	#0x04
 		jp z,_asmEventMidiCCPoly$;
-pop	bc
 ret
 
-_asmEventMidiPB$::
-	ld	A,B
+_asmEventMidiPB::
+	ld  a,(#_statusByte)
 	AND	#0x0F
 	cp	#0x00
 		jp z,_asmPu1MidiPb$;
@@ -132,11 +52,10 @@ _asmEventMidiPB$::
 		jp z,_asmNoiMidiPb$;
 	cp	#0x04
 		jp z,_asmPolyMidiPb$;
-pop	bc
 ret
 
-_asmEventMidiPC$::
-	ld	A,B
+_asmEventMidiPC::
+	ld  a,(#_statusByte)
 	AND	#0x0F
 	cp	#0x00
 		jp z,_asmPu1Lod$;
@@ -148,7 +67,6 @@ _asmEventMidiPC$::
 		jp z,_asmNoiLod$;
 	cp	#0x04
 		jp z,_asmPolyLod$;
-pop	bc
 ret
 
 ;----------------------------------------------------------------------------------------------------
@@ -173,7 +91,6 @@ _asmPu1MidiPb$::
 
 	ld	de,#_pbWheelIn + 0
     ld	(de),A
-pop	bc
 ret
 
 _asmPu2MidiPb$::
@@ -191,7 +108,6 @@ _asmPu2MidiPb$::
 
 	ld	de,#_pbWheelIn + 1
     ld	(de),A
-pop	bc
 ret
 
 _asmWavMidiPb$::
@@ -209,7 +125,6 @@ _asmWavMidiPb$::
 
 	ld	de,#_pbWheelIn + 2
     ld	(de),A
-pop	bc
 ret
 
 _asmNoiMidiPb$::
@@ -227,7 +142,6 @@ _asmNoiMidiPb$::
 
 	ld	de,#_pbWheelIn + 3
     ld	(de),A
-pop	bc
 ret
 
 _asmPolyMidiPb$::
@@ -249,7 +163,6 @@ _asmPolyMidiPb$::
     ld	(de),A
 	ld	de,#_pbWheelIn + 2
     ld	(de),A
-pop	bc
 ret
 
 
@@ -280,7 +193,6 @@ _asmEventMidiCCPu1$::
 		jp z,_asmPu1Sus$;
 	cp	#0x7B
 		jp z,_asmPu1Nf$;
-pop	bc
 ret
 
 _asmPu1Wav$::
@@ -303,7 +215,6 @@ _asmPu1Wav$::
 	AND #0x03
 	ld	de,#_dataSet + 1
     ld	(de),A
-pop	bc
 ret
 
 
@@ -326,7 +237,6 @@ _asmPu1Env$::
 
 	ld	de,#_dataSet + 2
     ld	(de),A
-pop	bc
 ret
 
 
@@ -343,7 +253,6 @@ _asmPu1Swp$::
 
 	ld	de,#_dataSet + 3
     ld	(de),A
-pop	bc
 ret
 
 
@@ -356,7 +265,6 @@ _asmPu1Pbr$::
 
 	ld	de,#_dataSet + 4
     ld	(de),A
-pop	bc
 ret
 
 
@@ -377,7 +285,6 @@ _asmPu1Lod$::
 	inc	sp
 	call	_updateSynth
     lda	sp,1(sp)
-pop	bc
 ret
 
 
@@ -408,7 +315,6 @@ _asmPu1PanLeft$::
 	and #0xEE
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmPu1PanCenter$::
 	ld	A,#0x03
@@ -420,7 +326,6 @@ _asmPu1PanCenter$::
 	and #0xEE
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmPu1PanRight$::
 	ld	A,#0x01
@@ -432,7 +337,6 @@ _asmPu1PanRight$::
 	and #0xEE
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 
 
@@ -443,7 +347,6 @@ _asmPu1VD$::
 	ld	de,#_vibratoDepth + 0
     ld	(de),A
 
-pop	bc
 ret
 
 
@@ -453,7 +356,6 @@ _asmPu1VR$::
 
 	ld	de,#_vibratoSpeed + 0
     ld	(de),A
-pop	bc
 ret
 
 
@@ -469,7 +371,6 @@ _asmPu1SusOn$::
     ld	(de),A
 	ld	hl,#_pu1Sus
     ld	(hl),A
-pop	bc
 ret
 _asmPu1SusOff$::
 	ld	A,#0x00
@@ -482,12 +383,10 @@ _asmPu1SusOff$::
 	ld	A,(hl)
 	bit 0,A
 	jr z, _asmPu1SusNoteOff$
-pop	bc
 ret
 _asmPu1SusNoteOff$::
 	ld	A,#0x00
 	ld	(#0xFF12),A
-pop	bc
 ret
 
 
@@ -498,7 +397,6 @@ _asmPu1Nf$::
     ld	(hl),A
 	ld	de,#_dataSet + 5
     ld	(de),A
-pop	bc
 ret
 
 
@@ -526,7 +424,6 @@ _asmEventMidiCCPu2$::
 		jp z,_asmPu2Sus$;
 	cp	#0x7B
 		jp z,_asmPu2Nf$;
-pop	bc
 ret
 
 _asmPu2Wav$::
@@ -549,7 +446,6 @@ _asmPu2Wav$::
 	AND #0x03
 	ld	de,#_dataSet + 8
     ld	(de),A
-pop	bc
 ret
 
 
@@ -572,7 +468,6 @@ _asmPu2Env$::
 
 	ld	de,#_dataSet + 9
     ld	(de),A
-pop	bc
 ret
 
 _asmPu2Pbr$::
@@ -584,7 +479,6 @@ _asmPu2Pbr$::
 
 	ld	de,#_dataSet + 10
     ld	(de),A
-pop	bc
 ret
 
 
@@ -605,7 +499,6 @@ _asmPu2Lod$::
 	inc	sp
 	call	_updateSynth
     lda	sp,1(sp)
-pop	bc
 ret
 
 
@@ -636,7 +529,6 @@ _asmPu2PanLeft$::
 	and #0xDD
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmPu2PanCenter$::
 	ld	A,#0x03
@@ -648,7 +540,6 @@ _asmPu2PanCenter$::
 	and #0xDD
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmPu2PanRight$::
 	ld	A,#0x01
@@ -660,7 +551,6 @@ _asmPu2PanRight$::
 	and #0xDD
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 
 
@@ -671,7 +561,6 @@ _asmPu2VD$::
 	ld	de,#_vibratoDepth + 1
     ld	(de),A
 
-pop	bc
 ret
 
 
@@ -681,7 +570,6 @@ _asmPu2VR$::
 
 	ld	de,#_vibratoSpeed + 1
     ld	(de),A
-pop	bc
 ret
 
 
@@ -697,7 +585,6 @@ _asmPu2SusOn$::
     ld	(de),A
 	ld	hl,#_pu2Sus
     ld	(hl),A
-pop	bc
 ret
 _asmPu2SusOff$::
 	ld	A,#0x00
@@ -710,12 +597,10 @@ _asmPu2SusOff$::
 	ld	A,(hl)
 	bit 0,A
 	jr z, _asmPu2SusNoteOff$
-pop	bc
 ret
 _asmPu2SusNoteOff$::
 	ld	A,#0x00
 	ld	(#0xFF17),A
-pop	bc
 ret
 
 
@@ -726,7 +611,6 @@ _asmPu2Nf$::
     ld	(hl),A
 	ld	de,#_dataSet + 11
     ld	(de),A
-pop	bc
 ret
 
 ;----------------------------------------------------------------------------------------------------
@@ -755,7 +639,6 @@ _asmEventMidiCCWav$::
 		jp z,_asmWavSus$;
 	cp	#0x7B
 		jp z,_asmWavNf$;
-pop	bc
 ret
 
 
@@ -780,7 +663,6 @@ _asmWavWav$::
 	ADD A,(hl)
 	ld	hl,#_wavDataOffset
 	ld	(hl),A
-pop	bc
 ret
 
 
@@ -806,7 +688,6 @@ _asmWavOst$::
 
 	ld	hl,#_wavDataOffset
 	ld	(hl),A
-pop	bc
 ret
 
 
@@ -825,7 +706,6 @@ _asmWavSwp$::
 	ld (hl),A
 	ld	de,#_dataSet + 16
     ld	(de),A
-pop	bc
 ret
 
 
@@ -838,7 +718,6 @@ _asmWavPbr$::
 
 	ld	de,#_dataSet + 17
     ld	(de),A
-pop	bc
 ret
 
 
@@ -859,7 +738,6 @@ _asmWavLod$::
 	inc	sp
 	call	_updateSynth
     lda	sp,1(sp)
-pop	bc
 ret
 
 
@@ -890,7 +768,6 @@ _asmWavPanLeft$::
 	and #0xBB
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmWavPanCenter$::
 	ld	A,#0x03
@@ -902,7 +779,6 @@ _asmWavPanCenter$::
 	and #0xBB
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmWavPanRight$::
 	ld	A,#0x01
@@ -914,7 +790,6 @@ _asmWavPanRight$::
 	and #0xBB
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 
 
@@ -925,7 +800,6 @@ _asmWavVD$::
 	ld	de,#_vibratoDepth + 2
     ld	(de),A
 
-pop	bc
 ret
 
 
@@ -935,7 +809,6 @@ _asmWavVR$::
 
 	ld	de,#_vibratoSpeed + 2
     ld	(de),A
-pop	bc
 ret
 
 
@@ -951,7 +824,6 @@ _asmWavSusOn$::
     ld	(de),A
 	ld	hl,#_wavSus
     ld	(hl),A
-pop	bc
 ret
 _asmWavSusOff$::
 	ld	A,#0x00
@@ -964,12 +836,10 @@ _asmWavSusOff$::
 	ld	A,(hl)
 	bit 0,A
 	jr z, _asmWavSusNoteOff$
-pop	bc
 ret
 _asmWavSusNoteOff$::
 	ld	A,#0x00
 	ld	(#0xFF1C),A
-pop	bc
 ret
 
 
@@ -980,7 +850,6 @@ _asmWavNf$::
     ld	(hl),A
 	ld	de,#_dataSet + 11
     ld	(de),A
-pop	bc
 ret
 
 ;----------------------------------------------------------------------------------------------------
@@ -1003,7 +872,6 @@ _asmEventMidiCCNoi$::
 		jp z,_asmNoiSus$;
 	cp	#0x7B
 		jp z,_asmNoiNf$;
-pop	bc
 ret
 
 
@@ -1026,7 +894,6 @@ _asmNoiEnv$::
 
 	ld	de,#_dataSet + 21
     ld	(de),A
-pop	bc
 ret
 
 
@@ -1047,7 +914,6 @@ _asmNoiLod$::
 	inc	sp
 	call	_updateSynth
     lda	sp,1(sp)
-pop	bc
 ret
 
 
@@ -1078,7 +944,6 @@ _asmNoiPanLeft$::
 	and #0x77
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmNoiPanCenter$::
 	ld	A,#0x03
@@ -1090,7 +955,6 @@ _asmNoiPanCenter$::
 	and #0x77
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 _asmNoiPanRight$::
 	ld	A,#0x01
@@ -1102,7 +966,6 @@ _asmNoiPanRight$::
 	and #0x77
 	or	B
 	ld (#0xFF25),A
-pop	bc
 ret
 
 
@@ -1113,7 +976,6 @@ _asmNoiVD$::
 	ld	de,#_vibratoDepth + 3
     ld	(de),A
 
-pop	bc
 ret
 
 
@@ -1123,7 +985,6 @@ _asmNoiVR$::
 
 	ld	de,#_vibratoSpeed + 3
     ld	(de),A
-pop	bc
 ret
 
 
@@ -1139,7 +1000,6 @@ _asmNoiSusOn$::
     ld	(de),A
 	ld	hl,#_noiSus
     ld	(hl),A
-pop	bc
 ret
 _asmNoiSusOff$::
 	ld	A,#0x00
@@ -1152,12 +1012,10 @@ _asmNoiSusOff$::
 	ld	A,(hl)
 	bit 0,A
 	jr z, _asmNoiSusNoteOff$
-pop	bc
 ret
 _asmNoiSusNoteOff$::
 	ld	A,#0x00
 	ld	(#0xFF21),A
-pop	bc
 ret
 
 
@@ -1168,7 +1026,6 @@ _asmNoiNf$::
     ld	(hl),A
 	ld	de,#_dataSet + 22
     ld	(de),A
-pop	bc
 ret
 
 ;----------------------------------------------------------------------------------------------------
@@ -1190,51 +1047,39 @@ _asmEventMidiCCPoly$::
 		jr z,_asmPolySus$;
 	cp	#0x7B
 		jr z,_asmPolyNf$;
-pop	bc
 ret
 
 _asmPolyWav$::
 	call _asmPu1Wav$;
-push	bc
 	call _asmPu2Wav$;
-push	bc
 	call _asmWavWav$;
 ret
 
 _asmPolyEnv$::
 	call _asmPu1Env$;
-push	bc
 	call _asmPu2Env$;
 ret
 
 _asmPolyLod$::
 	call _asmPu1Lod$;
-push	bc
 	call _asmPu2Lod$;
-push	bc
 	call _asmWavLod$;
 ret
 
 _asmPolyPan$::
 	call _asmPu1Pan$;
-push	bc
 	call _asmPu2Pan$;
-push	bc
 	call _asmWavPan$;
 ret
 
 _asmPolySus$::
 	call _asmPu1Sus$;
-push	bc
 	call _asmPu2Sus$;
-push	bc
 	call _asmWavSus$;
 ret
 
 _asmPolyNf$::
 	call _asmPu1Nf$;
-push	bc
 	call _asmPu2Nf$;
-push	bc
 	call _asmWavNf$;
 ret

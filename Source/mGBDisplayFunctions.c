@@ -1,9 +1,11 @@
-void printversion()
+#include "mGB.h"
+
+void printversion(void)
 {
 	set_bkg_tiles(1,16,10,1,versionnumber);
 }
 
-void printhelp()
+void printhelp(void)
 {
 	j=helpmap[cursorColumn][cursorRowMain];
 	set_bkg_tiles(1,16,18,1,helpdata[j]);
@@ -86,7 +88,7 @@ void updateDisplayValue(UBYTE p,UBYTE v)
 	}
 }
 
-void updateDisplaySynth()
+void updateDisplaySynth(void)
 {
   //printbyte(serialBufferPosition,serialBufferReadPosition,serialBuffer[serialBufferPosition]);
 	for(i=0;i!=0x09U;i++) {
@@ -96,7 +98,7 @@ void updateDisplaySynth()
 	}
 }
 
-void updateDisplay()
+void updateDisplay(void)
 {
   UBYTE x=0;
 	for(j=0;j!=0x04U;j++) {
@@ -110,7 +112,7 @@ void updateDisplay()
 	}
 }
 
-void setCursor()
+void setCursor(void)
 {
 	if(cursorColumnLast != cursorColumn) {
 		if(cursorColumn>0xF0U) cursorColumn=0x03U;
@@ -150,7 +152,7 @@ void setCursor()
 	printhelp();
 }
 
-void hideCursor()
+void hideCursor(void)
 {
 	for(j=0;j!=4;j++) {
 		move_sprite(j+SPRITE_ARRL_START,0, 0);
@@ -158,12 +160,12 @@ void hideCursor()
 	move_sprite(SPRITE_ARRT_START, 0, 0);
 }
 
-void showCursor()
+void showCursor(void)
 {
 	setCursor();
 }
 
-void setPlayMarker()
+void setPlayMarker(void)
 {
 	for(j=0;j!=4;j++) {
 		if(!j) {
@@ -179,7 +181,7 @@ void setPlayMarker()
 	}
 }
 
-void cls()
+void cls(void)
 {
 	for(j=0;j!=20;j++) bkg[j]= 0x00U;
 	for(j=0;j!=18;j++) {
@@ -187,14 +189,7 @@ void cls()
 	}
 }
 
-void showSampleScreen()
-{
-	hideCursor();
-	cls();
-	currentScreen = 1;
-}
-
-void showMainScreen()
+void showMainScreen(void)
 {
 	cls();
 	currentScreen = 1;
@@ -212,14 +207,14 @@ void showMainScreen()
     showCursor();
 }
 
-void showSplashScreen()
+void showSplashScreen(void)
 {
     hideCursor();
 	cls();
 	set_bkg_tiles(6,7,8,2,logo);
 }
 
-void toggleScreen()
+void toggleScreen(void)
 {
 	if(currentScreen == 0) {
 		DISPLAY_ON;
@@ -230,7 +225,7 @@ void toggleScreen()
 	}
 }
 
-void displaySetup()
+void displaySetup(void)
 {
 	DISPLAY_OFF;
 	set_bkg_palette( 0, 1, &bgpalette[0] );

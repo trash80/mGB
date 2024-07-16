@@ -1,10 +1,11 @@
+#include "mGB.h"
 
-void clearParameterLocks()
+void clearParameterLocks(void)
 {
 	for(j=0;j!=24;j++) parameterLock[j] = 0;
 }
 
-void setDataValue()
+void setDataValue(void)
 {
 	BOOLEAN up=0;
 	UBYTE inc=1;
@@ -69,7 +70,7 @@ void setDataValue()
 }
 
 
-void getPad()
+void getPad(void)
 {
 	i = joypad();
 	if(i != lastPadRead) {

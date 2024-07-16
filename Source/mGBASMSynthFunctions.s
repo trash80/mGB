@@ -1,5 +1,6 @@
+.module mGBASMSynthFunctions
+
 _asmUpdatePu1::
-push bc
 	ld	hl, #_pu1NoteOffTrigger
 	ld	A,(hl)
 	bit 0,A
@@ -14,14 +15,12 @@ push bc
 	ld	A,(hl)
 	bit 0,A
 	jr nz, _asmUpdatePu1PbWheelReset$
-pop bc
 ret
 
 _asmUpdatePu1Noff$::
 	ld	A,#0x00
 	ld (#0xFF12),A
 	ld (hl),A
-pop bc
 ret
 
 _asmUpdatePu1PbWheel$::
@@ -32,7 +31,6 @@ _asmUpdatePu1PbWheel$::
 	ld	A, #0x01
 	ld	hl, #_pbWheelActive + 0
 	ld	(hl), A
-pop bc
 ret
 _asmUpdatePu1PbWheelSet$::
 	ld	(hl), A
@@ -46,7 +44,6 @@ _asmUpdatePu1PbWheelSet$::
   inc	sp
   call	_setPitchBendFrequencyOffset
   inc	sp
-pop bc
 ret
 
 _asmUpdatePu1PbWheelReset$::
@@ -77,7 +74,6 @@ _asmUpdatePu1PbWheelReset$::
 	ld  A,(DE)
 	ld	(hl), A
 	ld	(#0xFF14),A
-pop bc
 ret
 
 ;--------------------------------------------------------------
@@ -85,7 +81,6 @@ ret
 ;--------------------------------------------------------------
 
 _asmUpdatePu2::
-push bc
 	ld	hl, #_pu2NoteOffTrigger
 	ld	A,(hl)
 	bit 0,A
@@ -100,14 +95,12 @@ push bc
 	ld	A,(hl)
 	bit 0,A
 	jr nz, _asmUpdatePu2PbWheelReset$
-pop bc
 ret
 
 _asmUpdatePu2Noff$::
 	ld	A,#0x00
 	ld (#0xFF17),A
 	ld (hl),A
-pop bc
 ret
 
 _asmUpdatePu2PbWheel$::
@@ -118,7 +111,6 @@ _asmUpdatePu2PbWheel$::
 	ld	A, #0x01
 	ld	hl, #_pbWheelActive + 1
 	ld	(hl), A
-pop bc
 ret
 _asmUpdatePu2PbWheelSet$::
 	ld	(hl), A
@@ -132,7 +124,6 @@ _asmUpdatePu2PbWheelSet$::
   inc	sp
   call	_setPitchBendFrequencyOffset
   inc	sp
-pop bc
 ret
 
 _asmUpdatePu2PbWheelReset$::
@@ -164,7 +155,6 @@ _asmUpdatePu2PbWheelReset$::
 	ld  A,(DE)
 	ld	(hl), A
 	ld	(#0xFF19),A
-pop bc
 ret
 
 ;--------------------------------------------------------------
@@ -172,7 +162,6 @@ ret
 ;--------------------------------------------------------------
 
 _asmUpdateWav::
-push bc
 	ld	hl, #_wavNoteOffTrigger
 	ld	A,(hl)
 	bit 0,A
@@ -195,14 +184,12 @@ push bc
 	bit 0,A
 	jr nz, _asmUpdateWavPbWheelReset$
 
-pop bc
 ret
 
 _asmUpdateWavNoff$::
 	ld	A,#0x00
 	ld (#0xFF1C),A
 	ld (hl),A
-pop bc
 ret
 
 
@@ -217,7 +204,6 @@ _asmUpdateWavData$::
 	ld	A, #0x80
 	ld	hl, #_pbWheelInLast + 2
 	ld	(hl), A
-pop bc
 ret
 
 _asmUpdateWavPbWheel$::
@@ -228,7 +214,6 @@ _asmUpdateWavPbWheel$::
 	ld	A, #0x01
 	ld	hl, #_pbWheelActive + 2
 	ld	(hl), A
-pop bc
 ret
 _asmUpdateWavPbWheelSet$::
 	ld	(hl), A
@@ -242,7 +227,6 @@ _asmUpdateWavPbWheelSet$::
   inc	sp
   call	_setPitchBendFrequencyOffset
   inc	sp
-pop bc
 ret
 
 _asmUpdateWavPbWheelReset$::
@@ -286,7 +270,6 @@ _asmUpdateWavPbWheelReset$::
 
 	and  #0x7F
 	ld	(#0xFF1E),A
-pop bc
 ret
 
 ;--------------------------------------------------------------
@@ -294,7 +277,6 @@ ret
 ;--------------------------------------------------------------
 
 _asmUpdateNoi::
-push bc
 	ld	hl, #_pbWheelIn + 3
 	ld	A,(hl)
 	cp #0x80
@@ -304,7 +286,6 @@ push bc
 	ld	A,(hl)
 	bit 0,A
 	jr nz, _asmUpdateNoiPbWheelReset$
-pop bc
 ret
 
 _asmUpdateNoiPbWheel$::
@@ -315,7 +296,6 @@ _asmUpdateNoiPbWheel$::
 	ld	A, #0x01
 	ld	hl, #_pbWheelActive + 3
 	ld	(hl), A
-pop bc
 ret
 _asmUpdateNoiPbWheelSet$::
 	ld	(hl), A
@@ -325,7 +305,6 @@ _asmUpdateNoiPbWheelSet$::
 	ld	(hl), A
 
   call	_setPitchBendFrequencyOffsetNoise
-pop bc
 ret
 
 _asmUpdateNoiPbWheelReset$::
@@ -354,7 +333,6 @@ _asmUpdateNoiPbWheelReset$::
 	ld	(#0xFF20),A
 	;ld  A,#0x80
 	;ld	(#0xFF23),A
-pop bc
 ret
 
 ;--------------------------------------------------------------
@@ -418,7 +396,6 @@ _asmPlayNotePu1OnSetOff$::
 	ld	(hl),A
 
 	jr	_asmPlayNotePu1On$
-pop bc
 ret
 
 
@@ -473,7 +450,6 @@ _asmPlayNotePu1On$::
 	ld	A,#0x00
 	ld	hl, #_pu1NoteOffTrigger
 	ld	(hl),A
-pop bc
 ret
 
 _asmPlayNotePu1Off$::
@@ -497,11 +473,9 @@ _asmPlayNotePu1Off$::
 
 	;ld	A,#0x00
 	;ld (#0xFF12),A
-pop bc
 ret
 
 _asmPlayNoteOffPu1Return$::
-pop bc
 ret
 
 ;--------------------------------------------------------------
@@ -559,7 +533,6 @@ _asmPlayNotePu2OnSetOff$::
 	ld	(hl),A
 
 	jr	_asmPlayNotePu2On$
-pop bc
 ret
 
 _asmPlayNotePu2On$::
@@ -612,7 +585,6 @@ _asmPlayNotePu2On$::
 	ld	A,#0x00
 	ld	hl, #_pu2NoteOffTrigger
 	ld	(hl),A
-pop bc
 ret
 
 _asmPlayNotePu2Off$::
@@ -636,7 +608,6 @@ _asmPlayNotePu2Off$::
 
 	;ld	A,#0x00
 	;ld (#0xFF17),A
-pop bc
 ret
 
 
@@ -659,7 +630,6 @@ _asmPlayNoteWav$::
 	cp #0x00
 	jr	nz,_asmPlayNoteWavOn$
 	jp	_asmPlayNoteWavOff$
-pop bc
 ret
 
 _asmPlayNoteWavOn$::
@@ -673,19 +643,16 @@ _asmPlayNoteWavOn$::
 	ld	A,#0x60
 	ld (#0xFF1C),A
 	jr _asmPlayNoteWavSet$
-pop bc
 ret
 _asmPlayNoteWavVolF$::
 	ld	A,#0x20
 	ld (#0xFF1C),A
 	jr _asmPlayNoteWavSet$
-pop bc
 ret
 _asmPlayNoteWavVolM$::
 	ld	A,#0x40
 	ld (#0xFF1C),A
 	jr _asmPlayNoteWavSet$
-pop bc
 ret
 
 _asmPlayNoteWavSet$::
@@ -755,7 +722,6 @@ _asmPlayNoteWavSet$::
 	ld	A,#0x00
 	ld	hl, #_wavNoteOffTrigger
 	ld	(hl),A
-pop bc
 ret
 
 
@@ -782,7 +748,6 @@ _asmPlayNoteWavOff$::
 
 	;ld	A,#0x00
 	;ld (#0xFF1C),A
-pop bc
 ret
 
 
@@ -804,7 +769,6 @@ _asmPlayNoteNoi$::
 	cp #0x00
 	jr	nz,_asmPlayNoteNoiOn$
 	jr	_asmPlayNoteNoiOff$
-pop bc
 ret
 
 _asmPlayNoteNoiOn$::
@@ -845,7 +809,6 @@ _asmPlayNoteNoiOn$::
 	ld  A,#0x01
 	ld	hl, #_noteStatus + 6
 	ld	(hl),A
-pop bc
 ret
 
 _asmPlayNoteNoiOff$::
@@ -865,7 +828,6 @@ _asmPlayNoteNoiOff$::
 
 	ld	A,#0x00
 	ld (#0xFF21),A
-pop bc
 ret
 
 
@@ -889,7 +851,6 @@ _asmPlayNotePoly$::
 	cp #0x00
 	jr	nz,_asmPlayNotePolyOn$
 	jr	_asmPlayNotePolyOff$
-pop bc
 ret
 _asmPlayNotePolyOff$::
 	ld	hl,#_polyNoteState + 0
@@ -912,20 +873,19 @@ _asmPlayNotePolyOff$::
 	ld	A,(hl)
 	cp	B
 	call z,_asmPlayNotePolyWavOff$;
-pop bc
 ret
 
 _asmPlayNotePolyPu1Off$::
 	call _asmPlayNotePu1
-	push bc
+
 ret
 _asmPlayNotePolyPu2Off$::
 	call _asmPlayNotePu2$
-	push bc
+
 ret
 _asmPlayNotePolyWavOff$::
 	call _asmPlayNoteWav$
-	push bc
+
 ret
 
 _asmPlayNotePolyOn$::
@@ -935,12 +895,10 @@ _asmPlayNotePolyOn$::
 	cp	#0x03
 	jr	z,_asmPlayNotePolyRst$
 	jr	_asmPlayNotePolyCon$
-pop bc
 ret
 _asmPlayNotePolyRst$::
 	ld	A, #0x00
 	jr	_asmPlayNotePolyCon$
-pop bc
 ret
 _asmPlayNotePolyCon$::
 	ld	(hl),A
@@ -952,18 +910,15 @@ _asmPlayNotePolyCon$::
 	ld	hl,#_polyNoteState + 2
 	ld	(hl),B
 	jp	_asmPlayNoteWav$;
-pop bc
 ret
 _asmPlayNotePolyPu1$::
 	ld	hl,#_polyNoteState + 0
 	ld	(hl),B
 	jp	_asmPlayNotePu1;
 
-pop bc
 ret
 _asmPlayNotePolyPu2$::
 	ld	hl,#_polyNoteState + 1
 	ld	(hl),B
 	jp	_asmPlayNotePu2$;
-pop bc
 ret

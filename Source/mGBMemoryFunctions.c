@@ -1,3 +1,4 @@
+#include "mGB.h"
 
 void saveDataSet(UBYTE synth)
 {
@@ -69,7 +70,7 @@ void loadDataSet(UBYTE synth)
 	DISABLE_RAM_MBC1;
 }
 
-void snapRecall()
+void snapRecall(void)
 {
 	if(cursorRowMain == 0x08U) {
 		for(l=0;l<4;l++) {
@@ -92,7 +93,7 @@ void snapRecall()
 	}
 }
 
-void checkMemory()
+void checkMemory(void)
 {
 	ENABLE_RAM_MBC1;
 	if(saveData[512] != 0xF7) {

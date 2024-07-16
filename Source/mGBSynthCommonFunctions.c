@@ -1,7 +1,8 @@
+#include "mGB.h"
 
 UBYTE wavStepCounter;
 
-void setOutputSwitch()
+void setOutputSwitch(void)
 {
 	NR51_REG = outputSwitch[0]+outputSwitch[1]+outputSwitch[2]+outputSwitch[3];
 }
@@ -139,7 +140,7 @@ void updateSynth(UBYTE synth)
 }
 
 
-void updateSynths()
+void updateSynths(void)
 {
 	enable_interrupts();
 
